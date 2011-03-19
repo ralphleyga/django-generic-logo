@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% load glogo_tags %}
+
+{% block title %}{{ group.name }}{% endblock %}
+
+{% block body %}
+    <a href="{% url groups %}">Back to all groups</a>
+    <h1>{{ group.name }}</h1>
+    {% with 'group' as content_type %}
+        {% with group.id as object_id %}
+            {% get_object_logo content_type object_id as group_logo %}
+            {% if group_logo %}
+                <img src="{{ group_logo.thumbnail_image.url }}"><br/>
+                <b>Primary</b>
+            {% else %}
+                <b>No primary logo</b>
+            {% endif %}
+        {% endwith %}
+    {% endwith %}
+    
+    <form method="POST" action="" enctype="multipart/form-data" >
+        {% csrf_token %}
+        {{ form }}
+        <p><input type="submit" value="Upload" /></p>
+    </form>
+    
+    <h3>Logos</h3>
+    {% with 'group' as content_type %}
+        {% with group.id as object_id %}
+            {% get_object_logos content_type object_id as group_logos %}
+            {% for group_logo in group_logos %}
+                <img src="{{ group_logo.thumbnail_image.url }}"><br/>
+                {% if group_logo.is_primary %}
+                    <b>primary photo</b>
+                {% else %}
+                    <a href="{% url select_primary group_logo.id %}?next={% url group group.id %}"><b>Set as default</b></a>
+                {% endif %}
+                 | 
+                <a href="{% url delete_logo group_logo.id %}?next={% url group group.id %}"><b>Delete</b></a>
+                <br/>
+            {% endfor %}
+        {% endwith %}
+    {% endwith %}
+{% endblock %}
