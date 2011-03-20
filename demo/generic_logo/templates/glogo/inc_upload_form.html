@@ -1,0 +1,13 @@
+{% load glogo_tags %}
+{% get_object_logos content_type object_id as group_logos %}
+{% for group_logo in group_logos %}
+    <img src="{{ group_logo.thumbnail_image.url }}"><br/>
+    {% if group_logo.is_primary %}
+        <b>primary photo</b>
+    {% else %}
+        <a href="{% url select_primary group_logo.id %}?next={% url group group.id %}"><b>Set as default</b></a>
+    {% endif %}
+     | 
+    <a href="{% url delete_logo group_logo.id %}?next={% url group group.id %}"><b>Delete</b></a>
+    <br/>
+{% endfor %}

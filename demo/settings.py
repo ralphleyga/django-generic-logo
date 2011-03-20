@@ -102,12 +102,12 @@ INSTALLED_APPS = (
      'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'glogo',
+    'generic_logo',
     'groups',
     'imagekit',
 )
 
-GLOGO_SPECS = 'glogo.specs'
+GLOGO_SPECS = 'generic_logo.specs'
 
 FIXTURE_DIRS = [
 	os.path.join(PROJECT_ROOT, "fixtures"),

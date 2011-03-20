@@ -10,8 +10,8 @@ from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
 
 
-from glogo.forms import GlogoForm
-from glogo.models import Glogo
+from generic_logo.forms import GlogoForm
+from generic_logo.models import Glogo
 
 
 def groups(request):
