@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load glogo_tags %}
+
+{% block title %}All Groups{% endblock %}
+
+{% block body %}
+    <h1>Django GLogo Demo</h1>
+    <ul>
+        {% for group in groups %}
+        <li>
+            <a href="{% url group group.id %}">{{ group }}</a><br/>
+            {% with 'group' as content_type %}
+                {% with group.id as object_id %}
+                    {% get_object_logo content_type object_id as group_logo %}
+                    {% if group_logo %}
+                        <img src="{{ group_logo.thumbnail_image.url }}">
+                    {% else %}
+                        <b>No Logo</b>
+                    {% endif %}
+                {% endwith %}
+            {% endwith %}
+        </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
