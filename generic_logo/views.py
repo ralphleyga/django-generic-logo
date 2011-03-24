@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import loader, RequestContext, Context
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -20,11 +21,12 @@ def select_primary(request, logo_id):
     glogo = get_object_or_404(Glogo, pk=logo_id)
     try:
         content_type = get_object_or_404(ContentType, model=glogo.content_type.model)
-        primary_logo = get_object_or_404(Glogo, is_primary=True, \
+        logos = Glogo.objects.filter(is_primary=True, \
                                             content_type=glogo.content_type, \
                                             object_id=glogo.object_id)
-        primary_logo.is_primary = False
-        primary_logo.save()
+        for logo in logos:
+            logo.is_primary = False
+            logo.save()
     except Exception, ObjectDoesNotExist:
         pass
     glogo.is_primary = True
@@ -49,3 +51,23 @@ def delete_logo(request, logo_id):
         return HttpResponseRedirect(next)
     else:
         return HttpResponse('Successsfully Delete')
+
+
+@login_required
+def upload_logo(request, content_object, image):
+    content_type = ContentType.objects.get(
+        app_label = content_object._meta.app_label,
+        model = content_object._meta.module_name
+    )
+    glogos = Glogo.objects.filter(content_type=content_type, \
+                        object_id=content_object.id, \
+                        is_primary=True)
+    for logo in glogos:
+        logo.is_primary = False
+        logo.save()
+    Glogo.objects.create(user=request.user, \
+                        image=image,
+                        content_type=content_type,
+                        object_id=content_object.id,
+                        is_primary=True)
+    return HttpResponse('successfully save')

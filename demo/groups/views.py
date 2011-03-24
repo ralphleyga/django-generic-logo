@@ -36,9 +36,10 @@ def group(request, group_id, form_class=GlogoForm):
     if request.method == "POST":
         form = form_class(request.POST, request.FILES)
         if form.is_valid():
-            model = 'group'
-            image = request.FILES['image']
-            upload_logo(request,'group', group_id, image)
+            form.cleaned_data
+            upload_logo(request, 
+                        group, 
+                        form.cleaned_data['image'])
     else:
         form = form_class()
         

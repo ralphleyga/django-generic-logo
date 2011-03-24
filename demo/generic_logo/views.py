@@ -21,11 +21,12 @@ def select_primary(request, logo_id):
     glogo = get_object_or_404(Glogo, pk=logo_id)
     try:
         content_type = get_object_or_404(ContentType, model=glogo.content_type.model)
-        primary_logo = get_object_or_404(Glogo, is_primary=True, \
+        logos = Glogo.objects.filter(is_primary=True, \
                                             content_type=glogo.content_type, \
                                             object_id=glogo.object_id)
-        primary_logo.is_primary = False
-        primary_logo.save()
+        for logo in logos:
+            logo.is_primary = False
+            logo.save()
     except Exception, ObjectDoesNotExist:
         pass
     glogo.is_primary = True
@@ -53,10 +54,13 @@ def delete_logo(request, logo_id):
 
 
 @login_required
-def upload_logo(request, model, object_id, image):
-    content_type = ContentType.objects.get(model=model)
+def upload_logo(request, content_object, image):
+    content_type = ContentType.objects.get(
+        app_label = content_object._meta.app_label,
+        model = content_object._meta.module_name
+    )
     glogos = Glogo.objects.filter(content_type=content_type, \
-                        object_id=object_id, \
+                        object_id=content_object.id, \
                         is_primary=True)
     for logo in glogos:
         logo.is_primary = False
@@ -64,6 +68,6 @@ def upload_logo(request, model, object_id, image):
     Glogo.objects.create(user=request.user, \
                         image=image,
                         content_type=content_type,
-                        object_id=object_id,
+                        object_id=content_object.id,
                         is_primary=True)
-    return HttpResponse('Successsfully Upload')
+    return HttpResponse('successfully save')

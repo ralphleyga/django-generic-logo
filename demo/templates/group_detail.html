@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load glogo_tags %}
+{% load generic_logo %}
 {% block title %}{{ group.name }}{% endblock %}
 
 {% block body %}
@@ -16,9 +16,8 @@
     {% endwith %}{% endwith %}
     
     {% include "generic_logo/_upload_logo.html" %}
-    
     <h3>Logos</h3>
-    {% with 'group' as content_type %}{% with group.id as object_id %}
+    {% with group as content_object %}
         {% include "generic_logo/_generic_logos.html" %}
-    {% endwith %}{% endwith %}
+    {% endwith %}
 {% endblock %}
