@@ -16,16 +16,14 @@ class GetObjectLogoNode(Node):
     def render(self, context):
         glogo = None
         content_type = ContentType.objects.get(model=context[self.content_type])
-        print content_type
-        print context[self.object_id]
-        Glogo = get_model('generic_logo', 'glogo')
+        Glogo = get_model('glogo', 'glogo')
         try:
             glogo = Glogo.objects.get(content_type=content_type, \
-                                object_id=context[self.object_id], \
-                                is_primary=True)
+                                        object_id=context[self.object_id], \
+                                        is_primary=True)
         except Exception, ObjectDoesNotExist:
             glogo = None
-        print glogo
+        
         context[self.varname] = glogo
         return ''
 
@@ -53,7 +51,7 @@ class GetObjectLogosNode(Node):
     def render(self, context):
         glogo = None
         content_type = ContentType.objects.get(model=context[self.content_type])
-        Glogo = get_model('generic_logo', 'glogo')
+        Glogo = get_model('glogo', 'glogo')
         glogo = Glogo.objects.filter(content_type=content_type, \
                                         object_id=context[self.object_id])
         context[self.varname] = glogo

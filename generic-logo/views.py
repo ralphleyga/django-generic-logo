@@ -4,7 +4,6 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import loader, RequestContext, Context
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 
 
@@ -50,20 +49,3 @@ def delete_logo(request, logo_id):
         return HttpResponseRedirect(next)
     else:
         return HttpResponse('Successsfully Delete')
-
-
-@login_required
-def upload_logo(request, model, object_id, image):
-    content_type = ContentType.objects.get(model=model)
-    glogos = Glogo.objects.filter(content_type=content_type, \
-                        object_id=object_id, \
-                        is_primary=True)
-    for logo in glogos:
-        logo.is_primary = False
-        logo.save()
-    Glogo.objects.create(user=request.user, \
-                        image=image,
-                        content_type=content_type,
-                        object_id=object_id,
-                        is_primary=True)
-    return HttpResponse('Successsfully Upload')

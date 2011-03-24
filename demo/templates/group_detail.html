@@ -5,28 +5,20 @@
 {% block body %}
     <a href="{% url groups %}">Back to all groups</a>
     <h1>{{ group.name }}</h1>
-    {% with 'group' as content_type %}
-        {% with group.id as object_id %}
-            {% get_object_logo content_type object_id as group_logo %}
-            {% if group_logo %}
-                <img src="{{ group_logo.thumbnail_image.url }}"><br/>
-                <b>Primary</b>
-            {% else %}
-                <b>No primary logo</b>
-            {% endif %}
-        {% endwith %}
-    {% endwith %}
+    {% with 'group' as content_type %}{% with group.id as object_id %}
+        {% get_object_logo content_type object_id as group_logo %}
+        {% if group_logo %}
+            <img src="{{ group_logo.thumbnail_image.url }}"><br/>
+            <b>Primary</b>
+        {% else %}
+            <b>No primary logo</b>
+        {% endif %}
+    {% endwith %}{% endwith %}
     
-    <form method="POST" action="" enctype="multipart/form-data" >
-        {% csrf_token %}
-        {{ form }}
-        <p><input type="submit" value="Upload" /></p>
-    </form>
+    {% include "generic_logo/_upload_logo.html" %}
     
     <h3>Logos</h3>
-    {% with 'group' as content_type %}
-        {% with group.id as object_id %}
-            {% include "generic_logo/inc_upload_form.html" %}
-        {% endwith %}
-    {% endwith %}
+    {% with 'group' as content_type %}{% with group.id as object_id %}
+        {% include "generic_logo/_generic_logos.html" %}
+    {% endwith %}{% endwith %}
 {% endblock %}

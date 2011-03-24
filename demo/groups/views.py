@@ -12,6 +12,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from generic_logo.forms import GlogoForm
 from generic_logo.models import Glogo
+from generic_logo.views import upload_logo
 
 
 def groups(request):
@@ -35,20 +36,9 @@ def group(request, group_id, form_class=GlogoForm):
     if request.method == "POST":
         form = form_class(request.POST, request.FILES)
         if form.is_valid():
-            content_type = ContentType.objects.get(model='group')
-            try:
-                glogo = Glogo.objects.get(content_type=content_type, \
-                                    object_id=group_id, \
-                                    is_primary=True)
-                glogo.is_primary = False
-                glogo.save()
-            except Exception, ObjectDoesNotExist:
-                pass
-            Glogo.objects.create(user=request.user, \
-                                image=request.FILES['image'],
-                                content_type=content_type,
-                                object_id=group_id,
-                                is_primary=True)
+            model = 'group'
+            image = request.FILES['image']
+            upload_logo(request,'group', group_id, image)
     else:
         form = form_class()
         
