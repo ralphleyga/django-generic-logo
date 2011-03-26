@@ -6,6 +6,7 @@ from django.utils.datastructures import SortedDict
 
 register = Library()
 
+
 class GetObjectLogoNode(Node):
     def __init__(self, content_type, object_id, varname):
         self.content_type = content_type
@@ -15,8 +16,6 @@ class GetObjectLogoNode(Node):
     def render(self, context):
         glogo = None
         content_type = ContentType.objects.get(model=context[self.content_type])
-        print content_type
-        print context[self.object_id]
         Glogo = get_model('generic_logo', 'glogo')
         try:
             glogo = Glogo.objects.get(content_type=content_type, \
